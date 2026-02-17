@@ -1,7 +1,14 @@
 from flask import Flask, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from mcstatus import JavaServer, BedrockServer
 
 app = Flask(__name__)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["20 per minute"],
+)
 
 @app.route("/java")
 def get_java_server_status():
