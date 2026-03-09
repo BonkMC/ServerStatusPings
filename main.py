@@ -9,7 +9,6 @@ TIMEOUT = 3
 PORTS = {
     "java": 25565,
     "bedrock": 19132,
-    "voicechat": 24454,
     "voting": 25563,
 }
 
@@ -20,19 +19,6 @@ def is_tcp_port_open(port):
             return True
     except (socket.timeout, socket.error):
         return False
-
-
-def is_udp_port_open(port):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(TIMEOUT)
-        sock.sendto(b'\x00', (HOST, port))
-        sock.recvfrom(1024)
-        return True
-    except (socket.timeout, socket.error):
-        return False
-    finally:
-        sock.close()
 
 
 def is_votifier_running(port):
@@ -52,11 +38,6 @@ def java_status():
 @app.route("/bedrock")
 def bedrock_status():
     return jsonify({"online": is_tcp_port_open(PORTS["bedrock"])})
-
-
-@app.route("/voicechat")
-def voicechat_status():
-    return jsonify({"online": is_udp_port_open(PORTS["voicechat"])})
 
 
 @app.route("/voting")
