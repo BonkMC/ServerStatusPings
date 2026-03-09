@@ -32,11 +32,6 @@ def is_votifier_running(port):
         return False
 
 
-def is_lobby_running(port):
-    return is_tcp_port_open(port)
-
-def is_survival_running(port):
-    return is_tcp_port_open(port)
 
 @app.route("/java")
 def java_status():
@@ -52,6 +47,15 @@ def bedrock_status():
 def voting_status():
     return jsonify({"online": is_votifier_running(PORTS["voting"])})
 
+
+@app.route("/lobby")
+def lobby_status():
+    return jsonify({"online": is_tcp_port_open(PORTS["lobby"])})
+
+
+@app.route("/survival")
+def survival_status():
+    return jsonify({"online": is_tcp_port_open(PORTS["survival"])})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2000)
