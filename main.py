@@ -3,34 +3,44 @@ import socket
 
 app = Flask(__name__)
 
-def check_java_server(host, port=25565, timeout=5):
+HOST = "127.0.0.1"
+TIMEOUT = 3
+
+PORTS = {
+    "java": 25565,
+    "bedrock": 19132,
+    "voicechat": 24454,
+    "voting": 25563,
+}
+
+
+def is_port_open(port):
     try:
-        with socket.create_connection((host, port), timeout=timeout):
+        with socket.create_connection((HOST, port), timeout=TIMEOUT):
             return True
     except (socket.timeout, socket.error):
         return False
 
-def check_bedrock_server(host, port=19132, timeout=5):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(timeout)
-        sock.sendto(b'\x01', (host, port))
-        sock.recvfrom(1024)
-        return True
-    except Exception:
-        return False
 
 @app.route("/java")
-def get_java_server_status():
-    return jsonify({
-        "online": check_java_server("play.bonkmc.net", 25565)
-    })
+def java_status():
+    return jsonify({"online": is_port_open(PORTS["java"])})
+
 
 @app.route("/bedrock")
-def get_bedrock_server_status():
-    return jsonify({
-        "online": check_bedrock_server("play.bonkmc.net", 19132)
-    })
+def bedrock_status():
+    return jsonify({"online": is_port_open(PORTS["bedrock"])})
+
+
+@app.route("/voicechat")
+def voicechat_status():
+    return jsonify({"online": is_port_open(PORTS["voicechat"])})
+
+
+@app.route("/voting")
+def voting_status():
+    return jsonify({"online": is_port_open(PORTS["voting"])})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2000)
