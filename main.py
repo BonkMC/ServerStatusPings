@@ -10,6 +10,8 @@ PORTS = {
     "java": 25565,
     "bedrock": 19132,
     "voting": 25563,
+    "lobby": 25560,
+    "survival": 25561,
 }
 
 
@@ -29,6 +31,12 @@ def is_votifier_running(port):
     except (socket.timeout, socket.error):
         return False
 
+
+def is_lobby_running(port):
+    return is_tcp_port_open(port)
+
+def is_survival_running(port):
+    return is_tcp_port_open(port)
 
 @app.route("/java")
 def java_status():
