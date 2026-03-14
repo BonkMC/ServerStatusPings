@@ -3,6 +3,8 @@ import socket
 
 app = Flask(__name__)
 
+# this is shit and repetitive but idgaf
+
 HOST = "127.0.0.1"
 TIMEOUT = 3
 
@@ -12,6 +14,7 @@ PORTS = {
     "voting": 25563,
     "lobby": 25560,
     "survival": 25561,
+    "databases": 3306,
 }
 
 
@@ -56,6 +59,11 @@ def lobby_status():
 @app.route("/survival")
 def survival_status():
     return jsonify({"online": is_tcp_port_open(PORTS["survival"])})
+
+@app.route("/databases")
+def databases_status():
+    return jsonify({"online": is_tcp_port_open(PORTS["databases"])})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2000)
